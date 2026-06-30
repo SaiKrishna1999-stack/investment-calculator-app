@@ -1,19 +1,27 @@
-import { Component } from '@angular/core';
+import { Component, Output } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { UserInput } from './user-input/user-input.component';
-
+import { InvestmentResults } from './investment-results/investment-results.component';
 
 @Component({
   selector: 'app-root',
-  imports: [HeaderComponent, UserInput],
+  imports: [HeaderComponent, UserInput, InvestmentResults],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   standalone: true
 })
 export class App {
 
+  annualData: { 
+    year: number; 
+    interest: number; 
+    valueEndOfYear: number; 
+    annualInvestment: number; 
+    totalInterest: number; 
+    totalAmountInvested: number 
+  }[] = [];
+
   onCaluculateInvestmentResults(event: { initialInvestment: number; annualInvestment: number; expectedReturn: number; duration: number }) {
-    const annualData = [];
     let investmentValue = event.initialInvestment;
 
     for (let i = 0; i < event.duration; i++) {
@@ -22,7 +30,7 @@ export class App {
       investmentValue += interestEarnedInYear + event.annualInvestment;
       const totalInterest =
         investmentValue - event.annualInvestment * year - event.initialInvestment;
-      annualData.push({
+      this.annualData.push({
         year: year,
         interest: interestEarnedInYear,
         valueEndOfYear: investmentValue,
@@ -31,7 +39,6 @@ export class App {
         totalAmountInvested: event.initialInvestment + event.annualInvestment * year,
       });
     }
-    console.log(annualData);
-    return annualData;
+    console.log(this.annualData);
   }
 }
